@@ -8,54 +8,63 @@ class MainPage extends React.Component {
             isNewUser: true,
             users: null,
             snap_username: '',
-            personal_photo: null
+            personal_photo: null,
+            imageToClassify: null
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.postFormOnSubmit = this.postFormOnSubmit.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
+        this.imageUploadChange = this.imageUploadChange.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
+        
+        this.API_URL = "https://snapsee.herokuapp.com";
+    }
+
+    api(path) {
+        return `${this.API_URL}/${path}`
+    }
+
+    getStrippedBitmojiURL() {
+        // not sure if this is lazy sorry
+        return this.props.data.data.me.bitmoji.avatar.split('?')[0];
     }
 
     componentWillMount(){
-        //gets all the users
-        let url = "https://glacial-scrubland-15145.herokuapp.com/users"
-        Request.get(url)
+        Request.get(this.api(`user/get/?bitmoji_url=${this.getStrippedBitmojiURL()}`))
         .then((res) => {
-            this.setState({
-                users: res
-            }, () => {
-                console.log(this.state.users);
-                console.log(this.state.users.body);
-                for(let user of this.state.users.body) {
-                    if(user.bitmoji_url === this.props.data.data.me.bitmoji.avatar){
-                        this.setState({
-                            isNewUser: false
-                        });
-                    }
-                }
-            });
+            if (res.body.length > 0) {
+                this.setState({
+                    isNewUser: false
+                });
+            }
         }); 
     }
 
     postFormOnSubmit(event){
         event.preventDefault();
 
-        console.log(this.props.data.data.me.displayName);
-        console.log(this.props.data.data.me.bitmoji.avatar);
-        console.log(this.state.snap_username);
-        console.log(this.state.personal_photo);
+        //console.log(this.props.data.data.me.displayName);
+        //console.log(this.getStrippedBitmojiURL());
+        //console.log(this.state.snap_username);
+        //console.log(this.state.personal_photo);
 
         //post new user to api
-        let url = "https://glacial-scrubland-15145.herokuapp.com/users"
-        Request.post(url)
+        Request.post(this.api('user/add'))
             .set('Content-Type', 'application/json')
             .send({
                 name: this.props.data.data.me.displayName,
-                bitmoji_url: this.props.data.data.me.bitmoji.avatar,
+                bitmoji_url: this.getStrippedBitmojiURL(),
                 username: this.state.snap_username,
-                image: this.state.personal_photo
+                image: null
             })
-            .then(res => console.log("success!"));
+            .then(() => Request.post(this.api('user/update/'))
+                .field('username', this.state.snap_username)
+                .attach('image', this.state.personal_photo)
+                .then(() => {})
+            );
+        
+        
         
         event.target.reset();
         //make api post request for:
@@ -75,6 +84,21 @@ class MainPage extends React.Component {
         this.setState({
             [event.target.name]: event.target.files[0]
         });
+    }
+
+    imageUploadChange(event){
+        this.setState({
+            imageToClassify: event.target.files[0]
+        });
+    }
+
+    uploadImage(event){
+        event.preventDefault();
+        //make post request to facial recognition api
+        Request.post(this.api('image/match/'))
+            .field('username', this.state.snap_username)
+            .attach('image', this.state.imageToClassify)
+            .then((res) => {console.log(res)});
     }
 
     render(){
@@ -105,11 +129,11 @@ class MainPage extends React.Component {
                     <h2 className="display-4">Welcome back to Snapsee <span style={{color: 'yellow'}}>{this.props.data.data.me.displayName}</span></h2>
                     <img className="mb-4" src={this.props.data.data.me.bitmoji.avatar} alt="bitmoji of user"/>
         
-                    <form action="/" method="get">
+                    <form action="/" method="get" onSubmit={this.uploadImage}>
                         <label htmlFor="image-upload" className="lead">
                             Upload an image of desired friends' face
                         </label><br/>
-                        <input required type="file" accept="image/*" id="image-upload"/>
+                        <input required type="file" accept="image/*" id="image-upload" onChange={this.imageUploadChange}/>
                         <button type="submit" value="submit">Upload Image</button>
                     </form>
                 </div>
