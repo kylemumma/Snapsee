@@ -98,7 +98,7 @@ class MainPage extends React.Component {
         Request.post(this.api('image/match/'))
             .field('username', this.state.snap_username)
             .attach('image', this.state.imageToClassify)
-            .then((res) => {console.log(res)});
+            .then((res) => {alert(res)});
     }
 
     render(){
