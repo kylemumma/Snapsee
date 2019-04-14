@@ -98,7 +98,7 @@ class MainPage extends React.Component {
         Request.post(this.api('image/match/'))
             .field('username', this.state.snap_username)
             .attach('image', this.state.imageToClassify)
-            .then((res) => {console.log(res)});
+            .then((res) => {alert(res.body.match)});
     }
 
     render(){
@@ -116,7 +116,7 @@ class MainPage extends React.Component {
                         <input required onChange={this.handleChange} type="text" id="snap-username" name="snap_username" className="form-control mb-4" style={{width: "80%", display: "block", margin: "0 auto"}}/>
 
                         <label style={{color: "yellow"}} htmlFor="image-upload" className="lead">
-                            Upload an image your face
+                            Upload an image of your face
                         </label><br/>
                         <input required onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" name="personal_photo"/>
                         <button type="submit" value="submit" className="btn btn-warning">Submit</button>
