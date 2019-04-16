@@ -4,20 +4,21 @@
 
 #### How to use?
  - Snapsee is live at [www.snapsee.net](https://www.snapsee.net)
+ - Snapsee currently only works with whitelisted snapchat accounts because of limitations of the snapchat dev kit
  
 ### Technologies Used
  - Front-End
    - HTML
    - CSS
    - React
-   - Netlify
  - Back End
    - Python
    - Flask
    - Postgresql
-   - Google Cloud
- - Facial Recognition API
-   - C#
+ - Hosting
+   - Netlift (Front-End)
+   - AWS (Postgres)
+   - Heroku (API)
  - Other Technologies
    - Snapchat Snap Kit
    - Domain.com
