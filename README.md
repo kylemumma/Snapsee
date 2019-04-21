@@ -16,7 +16,7 @@
    - Flask
    - Postgresql
  - Hosting
-   - Netlift (Front-End)
+   - Netlify (Front-End)
    - AWS (Postgres)
    - Heroku (API)
  - Other Technologies
