@@ -1,6 +1,6 @@
 # Snapsee
 ## Simplifying snapchat through one click friend adding
-### DefHacks Seattle 2019
+### Winner of 'Best Beginner Hack' at DefHacks Seattle 2019
 
 ![image of snapsee 1/4](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/798/904/datas/gallery.jpg)
 ![image of snapsee 2/4](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/798/902/datas/gallery.jpg)
